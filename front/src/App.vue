@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <header class="bg-dark">
@@ -9,35 +8,20 @@
   <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script>
+import { useUserStore } from '@/stores/user'
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+export default {
+  async mounted() {
+    const userStore = useUserStore()
+    if (userStore.token) {
+      try {
+        await userStore.me()
+      } catch (error) {
+        console.error('Failed to fetch user on load:', error)
+        userStore.logout()
+      }
+    }
+  },
 }
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-</style>
+</script>

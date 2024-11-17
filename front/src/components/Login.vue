@@ -21,6 +21,9 @@
                         class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                         autocomplete="off" />
                 </div>
+                <div v-if="errorMessage" class="text-red-500 mb-4">
+                    {{ errorMessage }}
+                </div>
                 <button 
                     @click="login"
                     class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">
@@ -36,21 +39,29 @@
 </template>
 <script>
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router';
 export default {
     setup() {
-        const userStore = useUserStore();
-        return { useUserStore }
+        const userStore = useUserStore()
+        const router = useRouter()
+
+        return { userStore, router }
     },
     data() {
         return {
             email: "",
             password: "",
+            errorMessage: "",
         }
     },
     methods: {
-        async login() {
-            await this.useUserStore.login(this.email, this.password)
-            this.$router.push('/')
+        async handleLogin() {
+            try {
+                await this.userStore.login(this.email, this.password)
+                this.$router.push('/dashboard')
+            } catch (error) {
+                this.errorMessage = error.message || 'Login failed. Please try again.'
+            }
         },
     }
         

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Login from '@/components/Login.vue'
 import Register from '@/components/Register.vue'
 import Dashboard from '@/components/Dashboard.vue'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,7 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard', 
       component: Dashboard,
+      meta: { requiresAuth: true },
     },
     // {
     //   path: '/about',
@@ -31,6 +33,32 @@ const router = createRouter({
     //   component: () => import('../views/AboutView.vue'),
     // },
   ],
+  
 })
+
+// Navigation Guard
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+
+  if (to.meta.requiresAuth) {
+    if (userStore.token) {
+      if (!userStore.user) {
+        try {
+          await userStore.me()
+          
+        } catch (error) {
+          return next({ name: 'login' })
+        }
+      }
+      return next()
+    } else {
+      return next({ name: 'login' })
+    }
+  }
+
+  next()
+})
+
+
 
 export default router
