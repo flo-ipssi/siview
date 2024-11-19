@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
-    public function store(Request $request): JsonResponse 
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'amount' => 'required|numeric',
@@ -17,14 +17,24 @@ class ExpenseController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $expense = Expense::create($validated);
+        $expense = Expense::create([
+            'user_id' => auth()->id(),
+            'amount' => $validated['amount'],
+            'category' => $validated['category'],
+            'date' => $validated['date'],
+            'description' => $validated['description'],
+        ]);
 
-        return response()->json($expense, 201);
+        return response()->json([
+            'message' => 'Expense created successfully',
+            'expense' => $expense,
+        ], 201);
     }
 
-    // public function stats(Request $request): JsonResponse
-    // {
-
-    // }
+    public function getExpenses(): JsonResponse
+    {
+        $expenses = auth()->user()->expenses()->latest()->get();
+        return response()->json($expenses);
+    }
 
 }

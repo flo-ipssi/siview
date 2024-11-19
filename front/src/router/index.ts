@@ -4,6 +4,7 @@ import Login from '@/components/Login.vue'
 import Register from '@/components/Register.vue'
 import Dashboard from '@/components/Dashboard.vue'
 import { useUserStore } from '@/stores/user'
+import Expense from '@/components/Expense.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,12 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard', 
       component: Dashboard,
+      meta: { requiresAuth: true },
+    },
+    { 
+      path: '/expense',
+      name: 'expense', 
+      component: Expense,
       meta: { requiresAuth: true },
     },
     // {

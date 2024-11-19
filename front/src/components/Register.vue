@@ -10,30 +10,35 @@
             <h1 class="text-2xl font-semibold mb-4">Inscription</h1>
             <form @submit.prevent="handleLogin">
                 <div class="mb-4">
-                    <label for="username" class="block text-gray-600">Username</label>
+                    <label for="username" class="block text-gray-600">Pseudo</label>
                     <input type="text" id="username" v-model="username"
                         class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                         autocomplete="off" />
                 </div>
                 <div class="mb-4">
                     <label for="email" class="block text-gray-600">Email</label>
-                    <input type="text" id="email" v-model="username"
+                    <input type="text" id="email" v-model="email"
                         class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                         autocomplete="off" />
                 </div>
                 <div class="mb-4">
-                    <label for="password" class="block text-gray-800">Password</label>
+                    <label for="password" class="block text-gray-800">Mot de passe</label>
                     <input type="password" id="password" v-model="password"
                         class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                         autocomplete="off" />
                 </div>
-                <button 
-                    @click="register"
+                <div class="mb-4">
+                    <label for="conf_password" class="block text-gray-800">Confirmation du mot de passe</label>
+                    <input type="password" id="conf_password" v-model="conf_password"
+                        class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                        autocomplete="off" />
+                </div>
+                <button @click="handleRegister"
                     class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">
                     Inscription
                 </button>
             </form>
-            
+
             <div class="mt-6 text-green-500 text-center">
                 <RouterLink to="/" class="hover:underline">Se connecter</RouterLink>
             </div>
@@ -41,17 +46,38 @@
     </div>
 </template>
 <script>
+import { useUserStore } from '@/stores/user'
 export default {
     data() {
         return {
             username: '',
-            password: ''
+            email: '',
+            password: '',
+            conf_password: '',
         }
     },
     methods: {
-        register() {
-            this.$store.dispatch('register', this.username)
+        async handleRegister() {
+            if (this.password !== this.conf_password) {
+                alert('Les mots de passe ne correspondent pas')
+                return
+            }
+
+            try {
+                const userStore = useUserStore();
+
+                await userStore.register({
+                    username: this.username,
+                    email: this.email,
+                    password: this.password,
+                    password_confirmation: this.conf_password,
+                });
+                this.$router.push('/dashboard');
+            } catch (error) {
+                console.error('Erreur lors de l\'inscription', error)
+            }
         }
     }
 }
+
 </script>

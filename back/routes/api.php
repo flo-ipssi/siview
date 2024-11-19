@@ -16,12 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
+Route::get('/me', action: [\App\Http\Controllers\AuthController::class, 'me']);
+
 Route::middleware('auth:api')->group(function () {
     // Auth
-    Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+    Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 
     // Expenses
-    Route::post('/expenses', [\App\Http\Controllers\ExpenseController::class, 'store']);
-    
-
+    Route::post('/expense/create', [\App\Http\Controllers\ExpenseController::class, 'store']);
+    Route::get('/expense/list', action: [\App\Http\Controllers\ExpenseController::class, 'getExpenses']);
 });

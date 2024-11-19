@@ -1,9 +1,15 @@
 import { defineStore } from 'pinia'
 
 interface User {
-    id: number;
-    email: string;
-    name: string;
+    email: string
+    name: string
+}
+
+interface CreateUser {
+    email: string
+    username: string
+    password: string
+    password_confirmation: string
 }
 
 export const useUserStore = defineStore('user', {
@@ -12,10 +18,8 @@ export const useUserStore = defineStore('user', {
         password: '',
         user: null as User | null,
         token: localStorage.getItem('token') || '',
-        isLoggedIn: !!localStorage.getItem('token'),
     }),
     getters: {
-        handleIsLoggedIn: (state) => state.isLoggedIn,
         handleEmail: (state) => state.email,
         handlePassword: (state) => state.password,
         handleToken: (state) => state.token,
@@ -42,40 +46,49 @@ export const useUserStore = defineStore('user', {
                 if (!data.token || !data.user) {
                     throw new Error('Invalid response from server')
                 }
-                
-                this.token = data.token;
-                this.user = data.user
-                this.isLoggedIn = true
-                localStorage.setItem('token', this.token)
 
+                this.token = data.token
+                this.user = data.user
+                localStorage.setItem('token', this.token)
             } catch (error) {
                 console.error('Login error:', error)
                 throw error
             }
         },
-
-        async register(email: string, password: string) {
-            const res = await fetch('http://localhost:8000/api/signup', {
+        async register(user: CreateUser) {
+            const res = await fetch('http://localhost:8000/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email,
-                    password,
+                    name: user.username,
+                    email: user.email,
+                    password: user.password,
+                    password_confirmation: user.password_confirmation,
                 }),
             })
-            const data = await res.json()
-            this.token = data.token
-            this.user = data.user
-            this.isLoggedIn = true
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || 'Erreur lors de l\'inscription');
+            }
+
+            const data = await res.json();
+            this.token = data.token;
+            this.user = data.user;
+            localStorage.setItem('token', this.token);
         },
         async me() {
+            if (!this.token) {
+                throw new Error('Token is not present');
+            }
+
             try {
                 const res = await fetch('http://localhost:8000/api/me', {
                     method: 'GET',
                     headers: {
-                        'Authorization': 'Bearer ' + this.token,
+                        Authorization: 'Bearer ' + this.token,
                     },
                 })
                 if (!res.ok) {
@@ -83,16 +96,15 @@ export const useUserStore = defineStore('user', {
                 }
                 const data = await res.json()
                 this.user = data.user
-                this.isLoggedIn = true
             } catch (error) {
                 console.error('Fetch user error:', error)
                 throw error
             }
         },
         logout() {
-            this.isLoggedIn = false
             this.token = ''
             this.user = null
+            localStorage.removeItem('token')
         },
     },
 })
