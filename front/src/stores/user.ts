@@ -18,6 +18,7 @@ export const useUserStore = defineStore('user', {
         password: '',
         user: null as User | null,
         token: localStorage.getItem('token') || '',
+        isLoading: false,
     }),
     getters: {
         handleEmail: (state) => state.email,
@@ -80,6 +81,7 @@ export const useUserStore = defineStore('user', {
             localStorage.setItem('token', this.token);
         },
         async me() {
+            this.isLoading = true
             if (!this.token) {
                 throw new Error('Token is not present');
             }
@@ -99,6 +101,8 @@ export const useUserStore = defineStore('user', {
             } catch (error) {
                 console.error('Fetch user error:', error)
                 throw error
+            } finally{
+                this.isLoading = false 
             }
         },
         logout() {

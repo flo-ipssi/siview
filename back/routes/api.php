@@ -24,5 +24,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Expenses
     Route::post('/expense/create', [\App\Http\Controllers\ExpenseController::class, 'store']);
-    Route::get('/expense/list', action: [\App\Http\Controllers\ExpenseController::class, 'getExpenses']);
+    Route::put('/expense/update/{id}', [\App\Http\Controllers\ExpenseController::class, 'update']);
+    Route::delete('/expense/delete/{id}', [\App\Http\Controllers\ExpenseController::class, 'delete']);
+    Route::get(uri: '/expense/list', action: [\App\Http\Controllers\ExpenseController::class, 'getExpenses']);
 });

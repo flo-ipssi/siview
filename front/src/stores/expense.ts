@@ -35,7 +35,7 @@ export const useExpenseStore = defineStore('expense', {
                     throw new Error('Failed to fetch expenses')
                 }
                 const data = await res.json()
-                this.expenses = data.expenses
+                this.expenses = data
             } catch (error) {
                 console.error('Fetch expenses error:', error)
                 throw error
@@ -56,11 +56,62 @@ export const useExpenseStore = defineStore('expense', {
                     throw new Error("Erreur lors de l'ajout de la dépense.");
                 }
 
-                const newExpense = await res.json();
+                const data = await res.json();
 
-                this.expenses.push(newExpense);
+                this.expenses.push(data.expense);
             } catch (error) {
                 console.error("Erreur lors de l'ajout :", error);
+                throw error;
+            }
+        },
+        async deleteExpense(expenseId: any) {
+            try {
+                const res = await fetch(`http://localhost:8000/api/expense/delete/${expenseId}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error("Erreur lors de la suppression de la dépense.");
+                }
+
+                console.log('Avant :', this.expenses);
+
+                this.expenses = this.expenses.filter((expense) => expense.id !== expenseId);
+                console.log(this.expenses.filter((expense) => expense.id !== expenseId));
+
+                console.log('Après :', this.expenses);
+            } catch (error) {
+                console.error("Erreur suppression:", error);
+                throw error;
+            }
+        },
+        async editExpense(updatedExpense: Expense) {
+            try {
+                const res = await fetch(`http://localhost:8000/api/expense/update/${updatedExpense.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify(updatedExpense),
+                });
+
+                if (!res.ok) {
+                    throw new Error("Erreur lors de la mise à jour de la dépense.");
+                }
+
+                const data = await res.json();
+                console.log(data);
+
+                const index = this.expenses.findIndex((expense) => expense.id === data.expense.id);
+                if (index !== -1) {
+                    this.expenses[index] = data.expense;
+                }
+            } catch (error) {
+                console.error("Erreur modification:", error);
                 throw error;
             }
         },

@@ -1,13 +1,13 @@
 <template>
   <div class="p-6 bg-white shadow-md rounded-md max-w-md mx-auto">
-    <h1>Hello {{ user.name }}</h1>
-    <h2 class="text-2xl font-bold mb-4 text-gray-700">Ajouter une Dépense</h2>
+    <h1 class="text-2xl my-2 font-bold mb-4 text-gray-700">Ajouter une Dépense</h1>
     <form @submit.prevent="addExpense">
       <div class="mb-4">
         <label class="block text-gray-600 mb-2" for="amount">Montant</label>
         <input
           type="number"
           id="amount"
+          step="0.01"
           v-model="expense.amount"
           class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Entrez le montant"
@@ -48,6 +48,14 @@
         ></textarea>
       </div>
       <button
+        v-if="expense.isLoading"
+        disabled
+        class="w-full bg-gray-300 text-gray-800 py-2 px-4 rounded-md"
+      >
+        Enregistrement en cours...
+      </button>
+      <button
+        v-else
         type="submit"
         class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
       >
@@ -71,6 +79,7 @@ export default {
       category: '',
       date: '',
       description: '',
+      isLoading: false,
     })
     const user = userStore.user
 
@@ -79,6 +88,7 @@ export default {
         alert('Tous les champs obligatoires doivent être remplis !')
         return
       }
+      expense.value.isLoading = true
 
       expenseStore
         .addExpense(expense.value)
@@ -88,6 +98,9 @@ export default {
         })
         .catch((err) => {
           alert('Une erreur est survenue : ' + err.message)
+        })
+        .finally(() => {
+          expense.value.isLoading = false
         })
     }
 

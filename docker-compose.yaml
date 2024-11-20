@@ -24,22 +24,21 @@ services:
     networks:
       - siview_net
 
-  # front:
-  #   build:
-  #     context: ./front
-  #     dockerfile: Dockerfile
-  #   container_name: front
-  #   ports:
-  #     - "8080:80"
-  #   depends_on:
-  #     - back
-  #   environment:
-  #     - NODE_TLS_REJECT_UNAUTHORIZED=0
-  #   volumes:
-  #     - ./front:/app
-  #   networks:
-  #     - siview_net
-
+  front:
+    container_name: my_frontend
+    image: node:lts
+    working_dir: /var/www/html/app/
+    entrypoint: /bin/bash
+    expose:
+      - 8080:8080
+    tty: true
+    depends_on:
+      - back
+    volumes:
+      - ./front:/var/www/html/app
+    networks:
+      - siview_net
+      
   siview_db:
     image: mysql:8.0
     container_name: siview_db

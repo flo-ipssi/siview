@@ -30,15 +30,7 @@ const router = createRouter({
       name: 'expense', 
       component: Expense,
       meta: { requiresAuth: true },
-    },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
+    }
   ],
   
 })
@@ -52,10 +44,9 @@ router.beforeEach(async (to, from, next) => {
       if (!userStore.user) {
         try {
           await userStore.me()
-          
         } catch (error) {
           return next({ name: 'login' })
-        }
+        } 
       }
       return next()
     } else {

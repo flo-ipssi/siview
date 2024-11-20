@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExpenseCategoryEnum;
 use App\Models\Expense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class ExpenseController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required|numeric',
-            'category' => 'required|string',
+            'category' => 'required|string|in:' . implode(',', ExpenseCategoryEnum::values()),
             'date' => 'required|date',
             'description' => 'nullable|string',
         ]);
@@ -31,10 +32,37 @@ class ExpenseController extends Controller
         ], 201);
     }
 
+    public function update(Request $request, $id): JsonResponse
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric',
+            'category' => 'required|string|in:' . implode(',', ExpenseCategoryEnum::values()),
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
+
+        $expense = Expense::find($id);
+        $expense->update($validated);
+
+        return response()->json([
+            'message' => 'Expense updated successfully',
+            'expense' => $expense,
+        ], 200);
+    }
+
+    public function delete($id): JsonResponse
+    {
+        $expense = Expense::find($id);
+        $expense->delete();
+        return response()->json([
+            'message' => 'Expense created successfully',
+        ], 204);
+    }
+
+
     public function getExpenses(): JsonResponse
     {
         $expenses = auth()->user()->expenses()->latest()->get();
         return response()->json($expenses);
     }
-
 }
