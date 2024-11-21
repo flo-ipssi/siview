@@ -71,3 +71,13 @@ Ce projet représente la partie backend de l'application, développée avec Lara
    ```
    [http://localhost:8080](http://localhost:8080)
 
+
+# TROUBLESHOOTING #
+### **Si le frontend ne s'affiche pas**
+1. **Réinstaller les dépendances et installer les packages avec Node **
+   ```bash
+      cd front
+      npm install
+      npm run dev
+   ```
+   [http://localhost:8080](http://localhost:8080)

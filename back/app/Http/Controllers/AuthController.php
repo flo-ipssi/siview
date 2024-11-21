@@ -50,13 +50,12 @@ class AuthController extends Controller
     public function logout(): JsonResponse
     {
         Auth::logout();
-
         return response()->json(['message' => 'Logged out successfully']);
     }
 
-    public function me(Request $request): JsonResponse
+    public function me(): JsonResponse
     {
-        $user = Auth::user();
+        $user = auth('api')->user();
         if (!$user) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
