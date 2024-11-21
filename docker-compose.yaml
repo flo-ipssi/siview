@@ -24,6 +24,7 @@ services:
     networks:
       - siview_net
 
+<<<<<<< HEAD
   front:
     container_name: my_frontend
     image: node:lts
@@ -38,6 +39,24 @@ services:
     networks:
       - siview_net
         
+=======
+  # front:
+  #   build:
+  #     context: ./front
+  #     dockerfile: Dockerfile
+  #   container_name: front
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - back
+  #   environment:
+  #     - NODE_TLS_REJECT_UNAUTHORIZED=0
+  #   volumes:
+  #     - ./front:/app
+  #   networks:
+  #     - siview_net
+
+>>>>>>> parent of bc8450a (Final global projet)
   siview_db:
     image: mysql:8.0
     container_name: siview_db

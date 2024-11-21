@@ -33,12 +33,9 @@
                         class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                         autocomplete="off" />
                 </div>
-                <button v-if="isLoading" disabled class="bg-gray-300 text-gray-800 font-semibold rounded-md py-2 px-4 w-full">
-                    Enregistrement en cours...
-                </button>
-                <button v-else @click="handleRegister"
+                <button @click="handleRegister"
                     class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">
-                    S'inscrire
+                    Inscription
                 </button>
             </form>
 
@@ -57,23 +54,10 @@ export default {
             email: '',
             password: '',
             conf_password: '',
-            isLoading: false,
         }
     },
     methods: {
         async handleRegister() {
-            this.isLoading = true
-            this.errorMessage = ''
-
-            if (!this.username) {
-                alert('Veuillez entrer un pseudo')
-                return
-            }
-
-            if (!this.email) {
-                alert('Veuillez entrer une adresse email')
-                return
-            }
             if (this.password !== this.conf_password) {
                 alert('Les mots de passe ne correspondent pas')
                 return
@@ -92,7 +76,6 @@ export default {
             } catch (error) {
                 console.error('Erreur lors de l\'inscription', error)
             }
-            this.isLoading = false
         }
     }
 }

@@ -7,7 +7,7 @@
         </div>
         <!-- Right: Login Form -->
         <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-            <h1 class="text-2xl font-semibold mb-4">Connexion</h1>
+            <h1 class="text-2xl font-semibold mb-4">Login</h1>
             <form @submit.prevent="handleLogin">
                 <div class="mb-4">
                     <label for="email" class="block text-gray-600">Email</label>
@@ -24,12 +24,10 @@
                 <div v-if="errorMessage" class="text-red-500 mb-4">
                     {{ errorMessage }}
                 </div>
-                <button v-if="isLoading" disabled class="bg-gray-300 text-gray-800 font-semibold rounded-md py-2 px-4 w-full">
-                    Connexion en cours...
-                </button> 
-                <button v-else @click="handleLogin" 
+                <button 
+                    @click="login"
                     class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">
-                    Se connecter
+                    Login
                 </button>
             </form>
 
@@ -54,19 +52,16 @@ export default {
             email: "",
             password: "",
             errorMessage: "",
-            isLoading: false,
         }
     },
     methods: {
         async handleLogin() {
-            this.isLoading = true
             try {
                 await this.userStore.login(this.email, this.password)
-                this.router.push('/dashboard')
+                this.$router.push('/dashboard')
             } catch (error) {
                 this.errorMessage = error.message || 'Login failed. Please try again.'
             }
-            this.isLoading = false
         },
     }
         
