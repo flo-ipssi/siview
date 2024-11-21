@@ -60,10 +60,14 @@ Ce projet représente la partie backend de l'application, développée avec Lara
 
 ### **Étapes pour Lancer le Frontend**
 
-1. **Accéder à l'Application**
+1. **Installer les dépendances**
    ```bash
+     docker exec -it front bash 
+     npm install
+   ```
+2. **Accéder à l'Application**
+   ```bash
+   docker exec -it front  npm run dev 
+   ```
    [http://localhost:8080](http://localhost:8080)
 
-2. **Installer les dépendances si ce n’est pas encore fait**
-   ```bash
-    npm install

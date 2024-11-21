@@ -1,16 +1,11 @@
-FROM node:lts-alpine
+FROM node:lts
 
-RUN npm install --save-dev
+WORKDIR /var/www/html/app
 
-WORKDIR /app
+COPY package.json package-lock.json ./
 
-COPY package*.json ./
+# RUN npm install --legacy-peer-deps
 
-RUN npm install
+# COPY . .
 
-COPY . .
-
-RUN npm run build
-
-EXPOSE 3000
-CMD [ "http-server", "dist" ]
+CMD ["npm", "run", "dev"]
