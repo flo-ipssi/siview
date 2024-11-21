@@ -27,18 +27,17 @@ services:
   front:
     container_name: my_frontend
     image: node:lts
-    working_dir: /var/www/html/app/
-    entrypoint: /bin/bash
-    expose:
+    working_dir: /var/www/html/app
+    ports:
       - 8080:8080
-    tty: true
-    depends_on:
-      - back
+    command: sh -c "npm install --legacy-peer-deps && npm run dev"
     volumes:
       - ./front:/var/www/html/app
+    depends_on:
+      - back
     networks:
       - siview_net
-      
+        
   siview_db:
     image: mysql:8.0
     container_name: siview_db
