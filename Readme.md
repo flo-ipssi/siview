@@ -81,3 +81,14 @@ Ce projet représente la partie backend de l'application, développée avec Lara
       npm run dev
    ```
    [http://localhost:8080](http://localhost:8080)
+
+
+### **Si les dépendances backend ne s'installent pas, installer composer**
+1. **Installer composer dans le conteneur**
+   ```bash
+      docker exec -it back bash
+      apt-get update
+      apt-get install -y composer
+      composer --version
+      composer install
+   ```
