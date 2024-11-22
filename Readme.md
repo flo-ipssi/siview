@@ -12,8 +12,8 @@ Ce projet représente la partie backend de l'application, développée avec Lara
 
 1. **Cloner le Dépôt**
    ```bash
-   git clone https://github.com/flo-ipssi/siview_back
-   cd siview_back
+   git clone https://github.com/flo-ipssi/siview
+   cd siview
 
 2. **Démarrer le service avec Docker Compose**
    ```bash
@@ -21,7 +21,7 @@ Ce projet représente la partie backend de l'application, développée avec Lara
 
 3. **Renommer le fichier env**
    ```bash
-   cd siview_back
+   cd siview
    cd back
    mv .env.example .env
 
